@@ -1,4 +1,4 @@
-echo_technical_interchange
+Echo Technical Interchange
 ==========================
 
 Temporary repository for the ECHO Technical Interchange development track material
