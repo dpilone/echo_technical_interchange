@@ -105,7 +105,6 @@ sub get_granules {
   push(@query_parameters, 'page_size=10');
   push(@query_parameters, 'page_num=1');
   push(@query_parameters, 'bounding_box=10.488,-0.703,53.331,68.906');
-  push(@query_parameters, 'bounding_box=10.488,-0.703,53.331,68.906');
   push(@query_parameters, 'temporal[]=2009-01-01T10:00:00Z,2010-03-10T12:00:00Z');
   push(@query_parameters, 'provider=LPDAAC_ECS');
   push(@query_parameters, "echo_collection_id=${dataset_id}");
