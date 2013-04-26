@@ -103,6 +103,8 @@ sub ingest_dataset {
     parse_and_display_errors($client->responseContent());
     exit 1;
   }
+
+  return;
 }
 
 my $provider_id = $ARGV[0];
