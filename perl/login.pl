@@ -9,6 +9,7 @@
 use strict;
 use warnings;
 
+use HTTP::Status qw(:constants);
 use Net::Address::IP::Local;
 use REST::Client;
 use XML::Hash;
@@ -49,7 +50,7 @@ $client->POST($echo_rest_tokens_url, $token_request_xml, $request_headers);
 # Convert the XML response to something we can work with
 my $response_hash_ref = $xml_converter->fromXMLStringtoHash($client->responseContent());
 
-if ($client->responseCode() == 201) {
+if ($client->responseCode() == HTTP_CREATED) {
   # If we get a 201 status code back, the token was created
   my $token = $response_hash_ref->{'token'}->{'id'}->{'text'};
   print "Token: ${token}\n";
