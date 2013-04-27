@@ -3,3 +3,5 @@ ingest_config.properties
 # Vim temp files
 *.swp
 
+# Java class files
+java/*/*.class

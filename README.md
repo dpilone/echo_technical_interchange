@@ -35,3 +35,11 @@ TODO - Verify the setup and possibly add a .env file to setup things like the CL
 ## Running java examples
 
 TODO
+
+### Compiling
+
+    javac -cp ../httpclient-4.2.5.jar:../httpcore-4.2.4.jar Login.java 
+
+### Running
+
+    java -cp ../httpclient-4.2.5.jar:../httpcore-4.2.4.jar:../commons-logging-1.1.1.jar:. Login
