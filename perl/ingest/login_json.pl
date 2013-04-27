@@ -8,6 +8,7 @@ use HTTP::Status qw(:constants);
 use JSON;
 use Net::Address::IP::Local;
 use REST::Client;
+use Config::Properties;
 
 sub get_token {
   my ($username, $password) = @_;
@@ -68,6 +69,13 @@ sub parse_and_display_errors {
 
   return;
 }
+open my $fh, '<', '../../ingest_config.properties'
+    or die "unable to open configuration file";
+    
+my $properties = Config::Properties->new();
+$properties->load($fh);
 
-print 'Token: ' . get_token('guest', 'user@example.com') . "\n";
+my $username = $properties->getProperty("username");
+my $password = $properties->getProperty("password");
 
+print 'Token: ' . get_token($username, $password) . "\n";

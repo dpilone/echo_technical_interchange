@@ -1,45 +1,4 @@
-cucumber.html
-.sass-cache
-lib/*.jar
-\#*
-tmp
-log
-application.yml
-database.yml
-torquebox.yml
-*.war
-app/views/**/*~
-nbproject
-.loadpath
-public/*docs
-public/*~
-.redcar
-.idea
-/features/background_once
-
-/bin
-/vendor/bundle
-
-# /
-/tmp
-/log
-/.loadpath
-/catalog-rest.war
-/.redcar
-
-# /config/
-/config/database.yml
-/config/application.yml
-
-# /public/
-/public/docs
-/public/*-docs
-
-# /support/sql/
-/support/sql/sql_tmp
-
-# /test/
-/test/reports
+ingest_config.properties
 
 # Vim temp files
 *.swp

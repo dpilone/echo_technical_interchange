@@ -9,6 +9,7 @@ use HTTP::Status qw(:constants);
 use Net::Address::IP::Local;
 use REST::Client;
 use XML::Simple;
+use Config::Properties;
 
 sub get_token {
   my ($username, $password) = @_;
@@ -71,10 +72,10 @@ sub parse_and_display_errors {
   return;
 }
 
-sub ingest_granule {
-  my ($token, $provider_id, $granule_ur, $granule_filename) = @_;
+sub ingest_dataset {
+  my ($token, $provider_id, $dataset_id, $dataset_filename) = @_;
 
-  my $granule_ingest_url = "https://testbed.echo.nasa.gov/catalog-rest/providers/${provider_id}/granules/${granule_ur}";
+  my $dataset_ingest_url = "https://testbed.echo.nasa.gov/catalog-rest/providers/${provider_id}/datasets/${dataset_id}";
 
   my $client = REST::Client->new();
 
@@ -84,34 +85,42 @@ sub ingest_granule {
     'Echo-Token' => $token
   };
 
-  my $granule = read_file($granule_filename);
+  my $dataset = read_file($dataset_filename);
 
   # PUT the dataset to the REST API
-  $client->PUT($granule_ingest_url, $granule, $request_headers);
+  $client->PUT($dataset_ingest_url, $dataset, $request_headers);
 
   if ($client->responseCode() == HTTP_CREATED) {
-    # If a 201 status code is returned, the granule was created
-    print "Granule was ingested.\n";
+    # If a 201 status code is returned, the dataset was created
+    print "Dataset was ingested.\n";
   }
   elsif ($client->responseCode() == HTTP_OK) {
-    # If a 200 status code is returned, the granule was updated
-    print "Granule was updated.\n";
+    # If a 200 status code is returned, the dataset was updated
+    print "Dataset was updated.\n";
   }
   else {
     # If we get anything other than a 200 or 201, something went wrong
-    print "Failed to ingest granule\n";
+    print "Failed to ingest dataset\n";
     parse_and_display_errors($client->responseContent());
     exit 1;
   }
 
   return;
 }
+open my $fh, '<', '../../ingest_config.properties'
+    or die "unable to open configuration file";
 
-my $provider_id = $ARGV[0];
-my $granule_ur= $ARGV[1];
-my $granule_filename = $ARGV[2];
-print "Ingesting ${granule_filename}\n";
+my $properties = Config::Properties->new();
+$properties->load($fh);
 
-my $token = get_token('guest', 'user@example.com');
-ingest_granule($token, $provider_id, $granule_ur, $granule_filename);
+my $provider_id = $properties->getProperty("provider");
+my $username = $properties->getProperty("username");
+my $password = $properties->getProperty("password");
+
+my $dataset_id = "SampleValidCollection_10";
+my $dataset_filename = "../../data/dataset1.xml";
+print "Ingesting ${dataset_filename}\n";
+
+my $token = get_token($username, $password);
+ingest_dataset($token, $provider_id, $dataset_id, $dataset_filename);
 
