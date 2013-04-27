@@ -14,16 +14,23 @@ Install the following CPAN modules:
   * Config::Properties
   * REST::Client
   * Net::Address::IP::Local
+  * JSON
+  * XML::Hash
+  * Mozilla::CA
+
 
 ## Running PERL examples
 
 Each PERL example is self contained and can be run by itself. For example the login.pl example can be run like this.
 
     cd perl/ingest
-    PERL_LWP_SSL_VERIFY_HOSTNAME=0 perl login.pl
+    perl login.pl
 
-TODO Determine what needs to be changed to run the examples without PERL_LWP_SSL_VERIFY_HOSTNAME flag.
+### Java Setup
 
+Download apache httpclient 4.2.5 from http://hc.apache.org/downloads.cgi
+
+TODO - Verify the setup and possibly add a .env file to setup things like the CLASSPATH 
 
 ## Running java examples
 
