@@ -76,7 +76,7 @@ public class Login
         + username
         + "</username><password>"
         + password
-        + "</password><client_id>ETIM Java</client_id><user_ip_address>127.0.0.1</user_ip_address></token>";
+        + "</password><client_id>ETIM Demo Java</client_id><user_ip_address>127.0.0.1</user_ip_address></token>";
   }
 
   /**

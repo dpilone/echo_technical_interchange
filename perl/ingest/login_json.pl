@@ -6,7 +6,6 @@ use warnings;
 use Data::Dumper;
 use HTTP::Status qw(:constants);
 use JSON;
-use Net::Address::IP::Local;
 use REST::Client;
 use Config::Properties;
 
@@ -25,16 +24,13 @@ sub get_token {
     'Accept' => 'application/json'
   };
 
-  # Figure out our IP address, since that's required to get a token
-  my $ip_address = Net::Address::IP::Local->public;
-
   # The token request being sent
   my $token_request_hash_ref = {
     'token' => {
       'username' => $username,
       'password' => $password,
-      'client_id' => 'ETIM demo',
-      'user_ip_address' => $ip_address
+      'client_id' => 'ETIM Demo PERL',
+      'user_ip_address' => '127.0.0.1'
     }
   };
   my $token_request_json = JSON::encode_json($token_request_hash_ref);

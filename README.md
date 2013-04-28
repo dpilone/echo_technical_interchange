@@ -13,7 +13,6 @@ Install the following CPAN modules:
 
   * Config::Properties
   * REST::Client
-  * Net::Address::IP::Local
   * JSON
   * XML::Hash
   * Mozilla::CA
