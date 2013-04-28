@@ -6,7 +6,6 @@ use warnings;
 use Data::Dumper;
 use File::Slurp;
 use HTTP::Status qw(:constants);
-use Net::Address::IP::Local;
 use REST::Client;
 use XML::Simple;
 use Config::Properties;
@@ -22,19 +21,16 @@ sub get_token {
 
   # We'll be using XML here.  We could also have used application/json
   my $request_headers = {
-    'Content-type' => 'application/xml',
+    'Content-Type' => 'application/xml',
     'Accept' => 'application/xml'
   };
-
-  # Figure out our IP address, since that's required to get a token
-  my $ip_address = Net::Address::IP::Local->public;
 
   # The token request being sent
   my $token_request_hash_ref = {
     'username' => { 'content' => $username },
     'password' => { 'content' => $password  },
     'client_id' => { 'content' => 'ETIM demo' },
-    'user_ip_address' => { 'content' => $ip_address }
+    'user_ip_address' => { 'content' => '127.0.0.1' }
   };
   my $token_request_xml = XMLout($token_request_hash_ref, RootName => 'token');
 
@@ -81,7 +77,7 @@ sub ingest_granule {
 
   # We'll be using XML here.  We could also have used application/json
   my $request_headers = {
-    'Content-type' => 'application/echo10+xml',
+    'Content-Type' => 'application/echo10+xml',
     'Echo-Token' => $token
   };
 

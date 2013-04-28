@@ -22,7 +22,7 @@ my $client = REST::Client->new();
 
 # We'll be using JSON here.  We could also have used application/xml
 my $request_headers = {
-  'Content-type' => 'application/json',
+  'Content-Type' => 'application/json',
   'Accept' => 'application/json'
 };
 

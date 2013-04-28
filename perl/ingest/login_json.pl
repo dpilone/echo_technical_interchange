@@ -20,7 +20,7 @@ sub get_token {
 
   # We'll be using XML here.  We could also have used application/json
   my $request_headers = {
-    'Content-type' => 'application/json',
+    'Content-Type' => 'application/json',
     'Accept' => 'application/json'
   };
 
