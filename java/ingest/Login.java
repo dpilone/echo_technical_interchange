@@ -1,7 +1,5 @@
-import java.io.FileInputStream;
-import java.io.StringReader;
+import java.io.*;
 import java.util.Properties;
-import java.util.Scanner;
 
 import javax.xml.xpath.*;
 
@@ -47,22 +45,15 @@ public class Login
     httpPost.setEntity(requestEntity);
 
     HttpResponse response = httpClient.execute(httpPost);
-    Scanner scanner = null;
     String token;
     try
     {
-      // Extract the body of the response
-      scanner = new Scanner(response.getEntity().getContent(), "UTF-8");
-
-      // TODO ask Leo why the useDelimiter call is required.
-      String xmlResponse = scanner.useDelimiter("\\A").next();
-
+      String xmlResponse = readInputStream(response.getEntity().getContent());
       // Parse out the token value from the XML response
       token = applyXPath(xmlResponse, "/token/id");
     }
     finally
     {
-      scanner.close();
       httpPost.releaseConnection();
     }
     return token;
@@ -97,6 +88,37 @@ public class Login
   {
     XPath evaluator = XPathFactory.newInstance().newXPath();
     return evaluator.evaluate(xpath, new InputSource(new StringReader(xml)));
+  }
+
+  /**
+   * Reads an input stream and returns the contents as a string.
+   * 
+   * @param is
+   *          input stream
+   * @return string contents of input string
+   * @throws IOException
+   */
+  private static String readInputStream(InputStream is) throws IOException
+  {
+    LineNumberReader reader = new LineNumberReader(new InputStreamReader(is));
+    try
+    {
+      StringBuilder builder = new StringBuilder();
+      String line = null;
+      while ((line = reader.readLine()) != null)
+      {
+        if (builder.length() != 0)
+        {
+          builder.append("\n");
+        }
+        builder.append(line);
+      }
+      return builder.toString();
+    }
+    finally
+    {
+      reader.close();
+    }
   }
 
   /**

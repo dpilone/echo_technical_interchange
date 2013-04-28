@@ -1,6 +1,5 @@
 import java.io.*;
 import java.util.Properties;
-import java.util.Scanner;
 
 import javax.xml.xpath.*;
 
@@ -70,7 +69,6 @@ public class IngestGranule
 
     // Send the request
     HttpResponse response = httpClient.execute(httpPut);
-    httpPut.releaseConnection();
 
     // Check for a successful response
     int responseCode = response.getStatusLine().getStatusCode();
@@ -86,11 +84,10 @@ public class IngestGranule
     else
     {
       System.out.println("Unexpected response code: " + responseCode);
-      Scanner scanner = new Scanner(response.getEntity().getContent(), "UTF-8");
-      String body = scanner.next();
-      scanner.close();
+      String body = readInputStream(response.getEntity().getContent());
       System.out.println(" body: " + body);
     }
+    httpPut.releaseConnection();
   }
 
   /**
@@ -111,17 +108,15 @@ public class IngestGranule
     httpPost.setEntity(requestEntity);
 
     HttpResponse response = httpClient.execute(httpPost);
-    Scanner scanner = null;
     String token;
     try
     {
-      scanner = new Scanner(response.getEntity().getContent(), "UTF-8");
-      String xmlResponse = scanner.useDelimiter("\\A").next();
+      String xmlResponse = readInputStream(response.getEntity().getContent());
+      // Parse out the token value from the XML response
       token = applyXPath(xmlResponse, "/token/id");
     }
     finally
     {
-      scanner.close();
       httpPost.releaseConnection();
     }
     return token;
@@ -156,6 +151,37 @@ public class IngestGranule
   {
     XPath evaluator = XPathFactory.newInstance().newXPath();
     return evaluator.evaluate(xpath, new InputSource(new StringReader(xml)));
+  }
+
+  /**
+   * Reads an input stream and returns the contents as a string.
+   * 
+   * @param is
+   *          input stream
+   * @return string contents of input string
+   * @throws IOException
+   */
+  private static String readInputStream(InputStream is) throws IOException
+  {
+    LineNumberReader reader = new LineNumberReader(new InputStreamReader(is));
+    try
+    {
+      StringBuilder builder = new StringBuilder();
+      String line = null;
+      while ((line = reader.readLine()) != null)
+      {
+        if (builder.length() != 0)
+        {
+          builder.append("\n");
+        }
+        builder.append(line);
+      }
+      return builder.toString();
+    }
+    finally
+    {
+      reader.close();
+    }
   }
 
   /**
