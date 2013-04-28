@@ -51,8 +51,13 @@ public class Login
     String token;
     try
     {
+      // Extract the body of the response
       scanner = new Scanner(response.getEntity().getContent(), "UTF-8");
+
+      // TODO ask Leo why the useDelimiter call is required.
       String xmlResponse = scanner.useDelimiter("\\A").next();
+
+      // Parse out the token value from the XML response
       token = applyXPath(xmlResponse, "/token/id");
     }
     finally
