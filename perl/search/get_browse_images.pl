@@ -7,7 +7,6 @@ use File::Spec;
 use File::Temp qw(tempdir);
 use HTTP::Status qw(:constants);
 use LWP::Simple;
-use Net::Address::IP::Local;
 use REST::Client;
 use URI;
 use XML::Simple;
@@ -27,15 +26,12 @@ sub get_token {
     'Accept' => 'application/xml'
   };
 
-  # Figure out our IP address, since that's required to get a token
-  my $ip_address = Net::Address::IP::Local->public;
-
   # The token request being sent
   my $token_request_hash_ref = {
     'username' => { 'content' => $username },
     'password' => { 'content' => $password  },
     'client_id' => { 'content' => 'ETIM demo' },
-    'user_ip_address' => { 'content' => $ip_address }
+    'user_ip_address' => { 'content' => '127.0.0.1' }
   };
 
   my $token_request_xml = XMLout($token_request_hash_ref, RootName => 'token');
@@ -109,10 +105,12 @@ sub get_granules {
   push(@query_parameters, 'page_size=10');
   push(@query_parameters, 'page_num=1');
   push(@query_parameters, 'bounding_box=10.488,-0.703,53.331,68.906');
-  push(@query_parameters, 'bounding_box=10.488,-0.703,53.331,68.906');
   push(@query_parameters, 'temporal[]=2009-01-01T10:00:00Z,2010-03-10T12:00:00Z');
   push(@query_parameters, 'provider=LPDAAC_ECS');
   push(@query_parameters, "echo_collection_id=${dataset_id}");
+  push(@query_parameters, 'sort_key[]=-end_date');
+  push(@query_parameters, 'day_night_flag=DAY');
+
 
   my $query_string = join(q{&}, @query_parameters);
 

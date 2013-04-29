@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use HTTP::Status qw(:constants);
-use Net::Address::IP::Local;
 use REST::Client;
 use XML::Simple;
 
@@ -23,15 +22,12 @@ sub get_token {
     'Accept' => 'application/xml'
   };
 
-  # Figure out our IP address, since that's required to get a token
-  my $ip_address = Net::Address::IP::Local->public;
-
   # The token request being sent
   my $token_request_hash_ref = {
     'username' => { 'content' => $username },
     'password' => { 'content' => $password  },
     'client_id' => { 'content' => 'ETIM demo' },
-    'user_ip_address' => { 'content' => $ip_address }
+    'user_ip_address' => { 'content' => '127.0.0.1' } 
   };
 
   my $token_request_xml = XMLout($token_request_hash_ref, RootName => 'token');
