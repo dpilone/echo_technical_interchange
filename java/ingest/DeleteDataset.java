@@ -5,20 +5,19 @@ import javax.xml.xpath.*;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.xml.sax.InputSource;
 
 /**
- * This example shows how to ingest a dataset into ECHO using the Catalog REST
+ * This example shows how to delete a dataset in ECHO using the Catalog REST
  * API.
  * 
  * @author jgilman
  */
-public class IngestDataset
+public class DeleteDataset
 {
 
   public static void main(String[] args) throws Exception
@@ -33,7 +32,7 @@ public class IngestDataset
     DefaultHttpClient httpClient = new DefaultHttpClient();
 
     String token = getToken(httpClient, username, password);
-    ingestDataset(httpClient, token, provider);
+    deleteDataset(httpClient, token, provider);
   }
 
   /**
@@ -47,39 +46,30 @@ public class IngestDataset
    *          the provider id to ingest data for.
    * @throws Exception
    */
-  private static void ingestDataset(HttpClient httpClient, String token,
+  private static void deleteDataset(HttpClient httpClient, String token,
       String provider) throws Exception
   {
     String datasetId = "SampleValidCollection_10";
     String url = "https://testbed.echo.nasa.gov/catalog-rest/providers/"
         + provider + "/datasets/" + datasetId;
-    HttpPut httpPut = new HttpPut(url);
-
-    // Set the body of the request to the dataset1.xml file
-    FileEntity requestEntity = new FileEntity(new File(
-        "../../data/dataset1.xml"));
-
-    // Set the ContentType header
-    requestEntity.setContentType("application/echo10+xml");
-
-    httpPut.setEntity(requestEntity);
+    HttpDelete httpDelete = new HttpDelete(url);
 
     // Set the Echo-Token Header
-    httpPut.setHeader("Echo-Token", token);
+    httpDelete.setHeader("Echo-Token", token);
 
     // Send the request
-    HttpResponse response = httpClient.execute(httpPut);
+    HttpResponse response = httpClient.execute(httpDelete);
 
     // Check for a successful response
     int responseCode = response.getStatusLine().getStatusCode();
 
-    if (responseCode == 201)
+    if (responseCode == 204)
     {
-      System.out.println("Dataset created.");
+      System.out.println("Dataset deleted.");
     }
-    else if (responseCode == 200)
+    else if (responseCode == 404)
     {
-      System.out.println("Dataset updated");
+      System.out.println("Dataset did not exist");
     }
     else
     {
@@ -87,7 +77,7 @@ public class IngestDataset
       String body = readInputStream(response.getEntity().getContent());
       System.out.println(" body: " + body);
     }
-    httpPut.releaseConnection();
+    httpDelete.releaseConnection();
   }
 
   /**
