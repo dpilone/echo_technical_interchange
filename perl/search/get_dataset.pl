@@ -5,6 +5,7 @@ use warnings;
 
 use HTTP::Status qw(:constants);
 use REST::Client;
+use URI::Encode qw(uri_encode);
 use XML::Simple;
 
 sub get_token {
@@ -72,7 +73,7 @@ sub get_dataset_id {
   push(@query_parameters, 'temporal[]=2009-01-01T10:00:00Z,2010-03-10T12:00:00Z');
   push(@query_parameters, 'provider=LPDAAC_ECS');
 
-  my $query_string = join(q{&}, @query_parameters);
+  my $query_string = uri_encode(join(q{&}, @query_parameters));
 
   my $request_url = "${datasets_url}?${query_string}";
 
