@@ -17,8 +17,8 @@ import org.xml.sax.InputSource;
 import org.w3c.dom.NodeList;
 
 /**
- * This example shows how to extract Browse URLs from granule metadata retrieved from ECHO using 
- * the Catalog REST API.
+ * This example shows how to extract OnlineResourceUrls that are in jpep format from granule metadata 
+ * that is retrieved from ECHO using the Catalog REST API.
  * 
  * @author yliu
  */
@@ -37,7 +37,7 @@ public class GetBrowseImages
   }
 
   /**
-   * Retrieve the browse urls for the search granule results
+   * Retrieve the jpeg online resource urls for the search granule results
    * 
    * @param httpClient
    *          the http client to use to send the data
@@ -80,7 +80,7 @@ public class GetBrowseImages
   }
 
   /**
-   * Applies an XPath to the response inputstream and filter for only the jpg files
+   * Applies an XPath to the response input stream and filter for only the jpg files
    * 
    * @param is
    *     input stream
