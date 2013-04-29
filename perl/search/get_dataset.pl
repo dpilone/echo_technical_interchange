@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-use Data::Dumper;
 use HTTP::Status qw(:constants);
 use REST::Client;
 use URI::Escape;
