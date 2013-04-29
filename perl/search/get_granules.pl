@@ -8,7 +8,11 @@ use REST::Client;
 use URI::Escape;
 use XML::Simple;
 
-my $granules_url = 'https://testbed.echo.nasa.gov/catalog-rest/echo_catalog/granules';
+# Get the format from the command line, or default to xml
+my $format = defined($ARGV[0]) ? $ARGV[0] : 'xml';
+
+# Build the granules URL based on the requested format
+my $granules_url = "https://testbed.echo.nasa.gov/catalog-rest/echo_catalog/granules.${format}";
 
 # Build up the list of search parameters that we're using
 # Make sure that the query parameter values are URI encoded
@@ -27,14 +31,9 @@ my $request_url = "${granules_url}?${query_string}";
 # Create the REST client
 my $client = REST::Client->new();
 
-# We'll be using XML here.  We could also have used application/json
-my $request_headers = {
-  'Accept' => 'application/xml',
-};
-
 # Issue the GET request
 print "> GET ${request_url}\n";
-$client->GET($request_url, $request_headers);
+$client->GET($request_url);
 
 my $response_content = $client->responseContent();
 
