@@ -1,0 +1,58 @@
+# RESTful Ingest Hand On Curl Examples
+
+This contains examples of how to login and ingest data using curl. You should have received a temporary username, password, and provider id from Jason for this session. These values should replace values in the curl statements below. The token received from logging in should be used with the later examples requiring a token.
+
+## Login
+
+This shows how to login through curl. **Replace username and password below with the temporary username and password emailed to you.** (If you didn't get one we can create one on demand)
+
+    curl -XPOST -H "Content-Type: application/xml" https://testbed.echo.nasa.gov/echo-rest/tokens -d '
+      <token>
+        <username>username</username>
+        <password>password</password>
+        <client_id>curl</client_id>
+        <user_ip_address>127.0.0.1</user_ip_address>
+      </token>'
+
+The response looks like this
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <token>
+      <id>XXXXXXXX-XXXX-XXXX-XXXXX-XXXXXXXXXX</id>
+      <username>username</username>
+      <client_id>curl</client_id>
+      <user_ip_address>127.0.0.1</user_ip_address>
+    </token>
+
+Copy the id from the response for use with the curl statements below.
+
+## Ingest a Dataset
+
+This will ingest the dataset to provider `PROV` with dataset id `SampleValidCollection_10` from the file `data/dataset1.xml`. Setting the "Expect" header is required to work around a problem with curl. This is usually not needed with other HTTP clients.
+
+    curl -v -XPUT -H "Expect: " -H "Echo-Token: XXXXXXXX-XXXX-XXXX-XXXXX-XXXXXXXXXX" -H "Content-Type: application/xml" https://testbed.echo.nasa.gov/catalog-rest/providers/PROV/datasets/SampleValidCollection_10 -d @data/dataset1.xml
+
+### Check That the Dataset was Ingested and Indexed
+
+This searches for datasets in the provider `PROV`. If the dataset was ingested successfully and indexed it will be found with this search. 
+
+    curl -H "Echo-Token: XXXXXXXX-XXXX-XXXX-XXXXX-XXXXXXXXXX" https://testbed.echo.nasa.gov/catalog-rest/echo_catalog/datasets.xml?provider=PROV
+
+
+## Ingest a Granule
+
+This will ingest the granule to provider `PROV` with granule UR `GranuleUR100` from the file `data/granule1.xml`. 
+
+    curl -XPUT -v -H "Expect: " -H "Echo-Token: XXXXXXXX-XXXX-XXXX-XXXXX-XXXXXXXXXX" -H "Content-Type: application/xml" https://testbed.echo.nasa.gov/catalog-rest/providers/PROV/granules/GranuleUR100 -d @data/granule1.xml 
+
+### Check That the Granule was Ingested and Indexed
+
+This searches for the granule. If it was ingested successfully and indexed it will be found with this search.
+
+    curl -H "Echo-Token: XXXXXXXX-XXXX-XXXX-XXXXX-XXXXXXXXXX" https://testbed.echo.nasa.gov/catalog-rest/echo_catalog/granules.xml?provider=PROV
+
+## Deleting the dataset
+
+Deletes the dataset and all of the granules in the dataset. Deleting a granule is similar. You send a delete to the same URL you used to PUT the granule.
+
+    curl -v -XDELETE -H "Echo-Token: XXXXXXXX-XXXX-XXXX-XXXXX-XXXXXXXXXX" https://testbed.echo.nasa.gov/catalog-rest/providers/PROV/datasets/SampleValidCollection_10
