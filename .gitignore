@@ -5,3 +5,7 @@ ingest_config.properties
 
 # Java class files
 java/*/*.class
+
+# Ignore the tmp directory
+tmp
+
