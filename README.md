@@ -36,3 +36,10 @@ The Java Examples use the [Apache HttpComponents](http://hc.apache.org) library,
 ### Running
 
     java -cp ../httpclient-4.2.5.jar:../httpcore-4.2.4.jar:../commons-logging-1.1.1.jar:. IngestDataset
+
+## Documentation
+http://testbed.echo.nasa.gov/echo-rest/
+http://testbed.echo.nasa.gov/catalog-rest/
+http://earthdata.nasa.gov/echo/controlled-documents/echo-partner-guides-documents
+http://earthdata.nasa.gov/sites/default/files/field/document/echo-rest-ingest-guide-july-2012_0.pdf
+http://earthdata.nasa.gov/sites/default/files/field/document/echo-rest-search-guide-november-2012_0.pdf
