@@ -40,10 +40,6 @@ $client->GET($request_url);
 
 my $response_content = $client->responseContent();
 
-foreach my $response_line (split(/\n/sxm, $response_content)) {
-  print "< ${response_line}\n"
-}
-
 # Parse the response
 my $granules_ref = XMLin($client->responseContent());
 
